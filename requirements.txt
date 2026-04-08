@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sqlalchemy
+pymysql
+passlib
+pyjwt
+flask_restful
+requests
+python-dotenv
