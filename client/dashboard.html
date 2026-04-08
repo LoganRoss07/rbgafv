@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+
+  <body class="bg-dark text-light">
+     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="logo.png" width="40">
+    </a>
+      
+      <ul class="navbar-nav mx-auto flex-row">
+
+        <li class="nav-item">
+          <a class="nav-link mx-3" href="dashboard.html">Dashboard</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link mx-3" href="movies.html">Movies</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link mx-3" href="reviews.html">Reviews</a>
+        </li>
+
+      </ul>
+      
+      <img src="profile.jpg" width="40" class="rounded-circle">
+  </div>
+</nav>
+
+    <div class="container mt-4">
+    <div class="card p-4 mb-4 bg-secondary">
+        <h3 class="mb-4">Statistics</h3>
+
+        <div id="stats" class="row text-center">
+            
+        </div>
+    </div>
+
+    <div class="card p-4 bg-secondary">
+      <h3 class=""mb-3">Recent Activity</h3>
+
+      <div id="activity">
+
+      </div>
+    </div>
+</div>
+
+<script>
+  async function loadDashboard() {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch("/server/stats", {
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    });
+
+    const data = await response.json();
+
+    document.getElementById("stats").innerHTML = `
+    <div class="col-3">
+      <div class="card p-3 bg-dark text-light">
+        <p>Total Movies</p>
+        <h4>${data.movies}</h4>
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="card p-3 bg-dark text-light">
+        <p>Total Reviews</p>
+        <h4>${data.reviews}</h4>
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="card p-3 bg-dark text-light">
+        <p>Pending Reviews</p>
+        <h4>${data.pending_reviews}</h4>
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="card p-3 bg-dark text-light">
+        <p>Total Users</p>
+        <h4>${data.users}</h4>
+      </div>
+    </div>
+    `;
+
+    const activityContainer = document.getElementById("activity");
+    activityContainer.innerHTML = "";
+
+    if (!data.recent_activity || data.recent_activity.length === 0) {
+      activityContainer.innerHTML = "<p>No recent activity</p>";
+      return;
+    }
+
+    data.recent_activity.forEach(a => {
+      activityContainer.innerHTML += `
+      <div class="card bg-dark text-light p-3 mb-2">
+        <p class="mb-0">${a}</p>
+      </div>
+      `;
+    });
+  }
+
+  loadDashboard();
+</script>
+  </body>
+</html>
