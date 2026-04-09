@@ -29,19 +29,31 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(tmdb_router)
 
-app.mount("/static", StaticFiles(directory="../frontend"), name="static")
+app.mount("/static", StaticFiles(directory="client"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 def index():
-    return FileResponse("../client/index.html")
+    return FileResponse("client/index.html")
 
 @app.get("/browse", response_class=HTMLResponse)
 def browser():
-    return FileResponse("../client/browse.html")
+    return FileResponse("client/browse.html")
 
 @app.get("/recommendations", response_class=HTMLResponse)
 def recommendations_page():
-    return FileResponse("../client/recommendations.html")
+    return FileResponse("client/recommendations.html")
+
+@app.get("/ratings", response_class=HTMLResponse)
+def ratings_page():
+    return FileResponse("client/ratings.html")
+
+@app.get("/reviews", response_class=HTMLResponse)
+def reviews_page():
+    return FileResponse("client/reviews.html")
+    
+@app.get("/dashboard", response_class=HTMLResponse)
+def dashboard_page():
+    return FileResponse("client/dashboard.html")
 
 @app.post("/login")
 def login(user: UserCreate, db: Session = Depends(get_db)):
